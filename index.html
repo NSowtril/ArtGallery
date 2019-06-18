@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Art Gallery</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+<body>
+<div id="info">
+    Art Gallery - Web Course Project develpoed by Lan Chudi(1552687)
+</div>
+
+<div id="container"></div>
+<!--<div id="container2"></div>-->
+
+<!--<div id="menu">-->
+    <!--<button id="table">TABLE</button>-->
+    <!--<button id="sphere">SPHERE</button>-->
+    <!--<button id="helix">HELIX</button>-->
+    <!--<button id="grid">GRID</button>-->
+<!--</div>-->
+
+
+<div id="video-container"></div>
+<!--<div id="blocker"></div>-->
+
+<script src="js/three.js"></script>
+<script src="js/WebGL.js"></script>
+
+<script id="vs" type="x-shader/x-vertex">
+
+			uniform sampler2D map;
+
+			uniform float width;
+			uniform float height;
+			uniform float nearClipping, farClipping;
+
+			uniform float pointSize;
+			uniform float zOffset;
+
+			varying vec2 vUv;
+
+			const float XtoZ = 1.11146; // tan( 1.0144686 / 2.0 ) * 2.0;
+			const float YtoZ = 0.83359; // tan( 0.7898090 / 2.0 ) * 2.0;
+
+			void main() {
+
+				vUv = vec2( position.x / width, position.y / height );
+
+				vec4 color = texture2D( map, vUv );
+				float depth = ( color.r + color.g + color.b ) / 3.0;
+
+				// Projection code by @kcmic
+
+				float z = ( 1.0 - depth ) * (farClipping - nearClipping) + nearClipping;
+
+				vec4 pos = vec4(
+					( position.x / width - 0.5 ) * z * XtoZ,
+					( position.y / height - 0.5 ) * z * YtoZ,
+					- z + zOffset,
+					1.0);
+
+				gl_PointSize = pointSize;
+				gl_Position = projectionMatrix * modelViewMatrix * pos;
+
+			}
+
+		</script>
+
+    <script id="fs" type="x-shader/x-fragment">
+
+			uniform sampler2D map;
+
+			varying vec2 vUv;
+
+			void main() {
+
+				vec4 color = texture2D( map, vUv );
+				gl_FragColor = vec4( color.r, color.g, color.b, 0.2 );
+
+			}
+
+	</script>
+
+<script src="js/objects/Reflector.js"></script>
+
+<script src="js/controls/TrackballControls.js"></script>
+<script src="js/controls/OrbitControls.js"></script>
+<script src="js/controls/DragControls.js"></script>
+
+<script src="js/loaders/GLTFLoader.js"></script>
+<script src="js/loaders/PLYLoader.js"></script>
+
+<script src="js/renderers/CSS3DRenderer.js"></script>
+
+<script src="js/libs/stats.min.js"></script>
+<script src='js/libs/dat.gui.min.js'></script>
+<!--<script src='js/libs/tween.min.js'></script>-->
+
+<script src="js/main.js"></script>
+<!--<script src="js/periodictable.js"></script>-->
+<script src="js/painting.js"></script>
+<script src="js/shading_physical.js"></script>
+<!--<script src="js/video.js"></script>-->
+<script src="js/room.js"></script>
+<script src="js/kinect.js"></script>
+<script src="js/statue.js"></script>
+
+</body>
+</html>

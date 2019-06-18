@@ -1,6 +1,3 @@
-
-var sphereGroup, smallSphere;
-
 var wallGroup;
 
 function initRoom() {
@@ -20,7 +17,7 @@ function initRoom() {
     groundMirror.receiveShadow = true;
 
     sphereGroup = new THREE.Group();
-    scene.add( sphereGroup );
+    centerGroup.add( sphereGroup );
 
     var geometry = new THREE.CylinderBufferGeometry( 0.1, 15 * Math.cos( Math.PI / 180 * 30 ), 0.1, 24, 1 );
     var material = new THREE.MeshPhongMaterial( { color: 0xffffff, emissive: 0x444444 } );
@@ -153,7 +150,8 @@ function initRoom() {
 
     var videoPlane = new THREE.Mesh(new THREE.PlaneBufferGeometry(100, 50), new THREE.MeshPhongMaterial( {color: 0x000000 } ) )
 
-    planeLeft.add(  videoPlane );
+    // planeLeft.add(  videoPlane );
+    planeRight.name = "Title: Prunus\n Artist: Vincent Van Gogh\n\n Internal masterpiece of the grate Vincent Van Gogh, with strong personal features and aesthetics."
     addPainting(planeRight);
 
     wallGroup = new THREE.Group();
@@ -198,20 +196,3 @@ function initRoom() {
 
 }
 
-function animateRoom() {
-    var timer = Date.now() * 0.01;
-    cameraControls.update();
-
-    sphereGroup.rotation.y -= 0.005;
-    statueGroup.rotation.y -= 0.05;
-
-    smallSphere.position.set(
-        Math.cos( timer * 0.1 ) * 30,
-        Math.abs( Math.cos( timer * 0.2 ) ) * 20 + 5,
-        Math.sin( timer * 0.1 ) * 30
-    );
-    smallSphere.rotation.y = ( Math.PI / 2 ) - timer * 0.1;
-    smallSphere.rotation.z = timer * 0.8;
-
-
-}

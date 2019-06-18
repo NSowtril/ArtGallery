@@ -2,6 +2,8 @@ var  raycaster, mouse;
 var line;
 
 function initStatue() {
+    centerGroup = new THREE.Group();
+    scene.add(centerGroup);
 
      statueGroup = new THREE.Group();
     var loader = new THREE.PLYLoader();
@@ -46,10 +48,10 @@ function initStatue() {
     } );
 
     // statueGroup.position.set(200, 50, -50);
-    statueGroup.name = "Title: Lucy\n Type: Statue \n The statue of lucy is a spinning angel with dolphins around her, and a homogram glittering above her head.";
+    statueGroup.name = "Title: Lucy\n Type: Statue \n\n The statue of lucy is a spinning angel with dolphins around her, and a homogram glittering above her head.";
     statueGroup.position.set(0, 70, 0);
     addObjectWithInfo(statueGroup);
-    scene.add(statueGroup);
+    centerGroup.add(statueGroup);
 
 
     addShadowedLight( 1, 1, 1, 0xffffff, 0.8, statueGroup );
@@ -86,23 +88,14 @@ function initStatue() {
                 child.castshadow = true;
                 child.receiveshadow = true;
 
-
-
                 var group = new THREE.Group();
                 var boxGeo = new THREE.BoxBufferGeometry(50, 60, 50);
                 var boxMat = new THREE.MeshPhongMaterial({color: 0xffffff});
                 var box = addObject(boxGeo, boxMat, -5,-60, 0, 0, group);
                 group.add(child);
                 group.position.set( 380, 80, 0);
-
-
-                pointLight = new THREE.PointLight( 0xffaa00, 1, 200 , 1);
-                pointLight.castShadow = true;
-                pointLight.position.x = 300;
-                pointLight.position.y = 150;
-                pointLight.position.z = 0;
-                pointLight.shadow.radius = 5;
-                scene.add( pointLight );
+                addObjectWithInfo(group);
+                group.name = "Title: Nerfertiti\n Type:Sculpture\n\n And odd sculpture with extrentric flavors, sophisticated but in a style of madness."
 
 
                 // recenter

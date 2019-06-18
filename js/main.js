@@ -5,35 +5,6 @@ if ( WEBGL.isWebGLAvailable() === false ) {
 
 }
 
-var container, stats;
-
-var camera, scene, renderer;
-
-var WIDTH = window.innerWidth;
-var HEIGHT = window.innerHeight;
-
-// 相机
-var VIEW_ANGLE = 30;
-var ASPECT = WIDTH / HEIGHT;
-var NEAR = 1;
-var FAR = 5000;
-
-var mouseX = 0, mouseY = 0;
-
-var planeGeometry;
-var statueGroup;
-var shadingPhysicalGroup;
-
-var shaderMaterial;
-
-var hemiLight;
-
-var controls = new function () {
-    this.intensity = 1;
-};
-
-var cameraControls;
-
 window.onload = function () {
   init();
   animate();
@@ -62,9 +33,6 @@ function init() {
     window.addEventListener( 'mousemove', onMouseMove, false );
 }
 
-var raycaster = new THREE.Raycaster();
-var mouse = new THREE.Vector2();
-var itemInfo;
 
 function onMouseMove( event ) {
     // 将鼠标位置归一化为设备坐标。x 和 y 方向的取值范围是 (-1 to +1)
@@ -82,8 +50,8 @@ function onMouseMove( event ) {
 
 }
 
-
 function animate() {
+    cameraControls.update();
 
     // 计算物体和射线的焦点
     var intersects = raycaster.intersectObjects( objects, true );
@@ -97,8 +65,20 @@ function animate() {
 
     }
 
-    animateRoom();
-    // controls.update();
+    // animateRoom();
+    var timer = Date.now() * 0.01;
+    cameraControls.update();
+
+    sphereGroup.rotation.y -= 0.005;
+    statueGroup.rotation.y -= 0.05;
+
+    smallSphere.position.set(
+        Math.cos( timer * 0.1 ) * 30,
+        Math.abs( Math.cos( timer * 0.2 ) ) * 20 + 5,
+        Math.sin( timer * 0.1 ) * 30
+    );
+    smallSphere.rotation.y = ( Math.PI / 2 ) - timer * 0.1;
+    smallSphere.rotation.z = timer * 0.8;
 
     var delta = clock.getDelta();
 
@@ -185,18 +165,37 @@ function initRenderer(){
 function initGui() {
     gui = new dat.GUI();
 
-    var shaderGuiGroup = gui.addFolder("全息影像")
+    var shaderGuiGroup = gui.addFolder("全息影像");
     shaderGuiGroup.add( shaderMaterial.uniforms.nearClipping, 'value', 1, 10000, 1.0 ).name( '远端' );
     shaderGuiGroup.add( shaderMaterial.uniforms.farClipping, 'value', 1, 10000, 1.0 ).name( '近端' );
     shaderGuiGroup.add( shaderMaterial.uniforms.pointSize, 'value', 1, 10, 1.0 ).name( '颗粒' );
     shaderGuiGroup.add( shaderMaterial.uniforms.zOffset, 'value', 0, 4000, 1.0 ).name( '偏移' );
-    shaderGuiGroup.open();
+    // shaderGuiGroup.open();
+
+    var LucyGuiGroup = gui.addFolder("Lucy雕塑");
+    LucyGuiGroup.add( controls.lucy, "x", -350, 350).name("左/右").onChange(function (e) {
+        centerGroup.position.x = e;
+    });
+    LucyGuiGroup.add (controls.lucy, "z", -200, 200).name("前/后").onChange(function (e) {
+        centerGroup.position.z = e;
+    });
+    // LucyGuiGroup.open();
+
+    var CombinationGui = gui.addFolder("组合装置");
+    CombinationGui.add( controls.combination, "x", -350, 350).onChange(function (e) {
+        shadingPhysicalGroup.position.x = e;
+    });
+    CombinationGui.add( controls.combination, "z", -200, 200).onChange(function (e) {
+        shadingPhysicalGroup.position.z = e;
+    });
 
     gui.add(controls, 'intensity', 0, 5).name("灯光强度1").onChange(function (e) {
         hemiLight.intensity = e;
     });
 
-    // gui.open();
+
+    console.log(gui.domElement.style);
+    // gui.close();
 }
 
 function initObject() {
@@ -210,6 +209,13 @@ function initLight() {
     hemiLight.intensity = 0.6;
     scene.add( hemiLight );
 
+    pointLight = new THREE.PointLight( 0xffaa00, 1, 200 , 1);
+    pointLight.castShadow = true;
+    pointLight.position.x = 300;
+    pointLight.position.y = 150;
+    pointLight.position.z = 0;
+    pointLight.shadow.radius = 5;
+    scene.add( pointLight );
 }
 
 function initCameraControls() {

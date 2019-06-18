@@ -10,17 +10,20 @@ function addPainting( wall ) {
 
         var geometry = new THREE.PlaneBufferGeometry( 100, 100 );
         mesh = new THREE.Mesh( geometry, materialPainting );
-        mesh.scale.x = image.width / 2000;
-        mesh.scale.y = image.height / 2000;
+        mesh.scale.x = image.width / 500;
+        mesh.scale.y = image.height / 500;
+        mesh.doubleSided = true;
 
         wall.add( mesh );
-        mesh.position.x -= 1;
+        mesh.position.x -= 5;
+        mesh.add(new THREE.Object3D());
+        addObjectWithInfo(mesh);
 
         var meshFrame = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color: 0x000000, side:THREE.DoubleSide } ) );
         meshFrame.scale.x = 1.1 * image.width / 2000;
         meshFrame.scale.y = 1.1 * image.height / 2000;
 
-        wall.add(meshFrame);
+        // wall.add(meshFrame);
 
     };
 

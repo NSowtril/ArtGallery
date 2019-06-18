@@ -22,7 +22,7 @@ var gui, shadowCameraHelper, shadowConfig = {
 var brickMaterial;
 
 function initShadingPhysical() {
-    var shadingPhysicalGroup = new THREE.Group();
+    shadingPhysicalGroup = new THREE.Group();
     shadingPhysicalGroup.name = "Shading Physical Group";
 
     // 纹理加载器
@@ -179,19 +179,9 @@ function initShadingPhysical() {
     shadingPhysicalGroup.position.z = 150;
     scene.add(shadingPhysicalGroup);
 
+
+    shadingPhysicalGroup.name = "Title: Man Sitting on the Box \n Type: Group Items\n A man sitting in a circle of lava pattern, with warm lights shattering around."
+    addObjectWithInfo(shadingPhysicalGroup);
 }
 
 
-
-function renderShadingPhysical() {
-    // 更新
-    var delta = clock.getDelta();
-
-    if ( mixer ) {
-        mixer.update( delta );
-    }
-
-
-    // 渲染场景
-    renderer.render( scene, camera );
-}

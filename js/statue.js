@@ -1,6 +1,3 @@
-
-var statueGroup;
-
 var  raycaster, mouse;
 var line;
 
@@ -42,14 +39,16 @@ function initStatue() {
         mesh.receiveShadow = true;
         mesh.name = "Lucy";
 
+
         statueGroup.add( mesh );
         addKinect(mesh);
 
     } );
 
     // statueGroup.position.set(200, 50, -50);
-    statueGroup.name = "Statue Group";
+    statueGroup.name = "Title: Lucy\n Type: Statue \n The statue of lucy is a spinning angel with dolphins around her, and a homogram glittering above her head.";
     statueGroup.position.set(0, 70, 0);
+    addObjectWithInfo(statueGroup);
     scene.add(statueGroup);
 
 

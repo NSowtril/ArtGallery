@@ -26,7 +26,7 @@ function addKinect(wall) {
 
         geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
 
-        var material = new THREE.ShaderMaterial( {
+        shaderMaterial = new THREE.ShaderMaterial( {
 
             uniforms: {
 
@@ -48,18 +48,11 @@ function addKinect(wall) {
 
         } );
 
-        var mesh = new THREE.Points( geometry, material );
+        var mesh = new THREE.Points( geometry, shaderMaterial );
         mesh.rotation.x = Math.PI / 2;
         wall.add( mesh );
 
-        // var gui = new dat.GUI();
-        gui.add( material.uniforms.nearClipping, 'value', 1, 10000, 1.0 ).name( 'nearClipping' );
-        gui.add( material.uniforms.farClipping, 'value', 1, 10000, 1.0 ).name( 'farClipping' );
-        gui.add( material.uniforms.pointSize, 'value', 1, 10, 1.0 ).name( 'pointSize' );
-        gui.add( material.uniforms.zOffset, 'value', 0, 4000, 1.0 ).name( 'zOffset' );
-
-
-        gui.open();
+        initGui();
 
 
     }, false );

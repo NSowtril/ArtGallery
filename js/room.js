@@ -1,22 +1,9 @@
 
-var cameraControls;
-
 var sphereGroup, smallSphere;
 
 var wallGroup;
 
 function initRoom() {
-
-    cameraControls = new THREE.OrbitControls( camera, renderer.domElement );
-    cameraControls.target.set( 0, 50, 50 );
-    cameraControls.maxDistance = 500;
-    cameraControls.minDistance = 1;
-    // cameraControls.keyPanSpeed = 50;
-    cameraControls.enableDamping = true;
-    // cameraControls.enableRotate = false;
-    cameraControls.rotateSpeed = 0.5;
-    // cameraControls.panSpeed = 100;
-    cameraControls.update();
 
     // 反射器/镜子
 
@@ -94,8 +81,7 @@ function initRoom() {
         groundMaterial.bumpMap = map;
         groundMaterial.needsUpdate = true;
 
-    } );hemiLight = new THREE.HemisphereLight( 0xddeeff, 0x0f0e0d, 0.02 );
-    scene.add( hemiLight );
+    } );
 
     textureLoader.load( "textures/hardwood2_roughness.jpg", function ( map ) {
 
@@ -208,22 +194,13 @@ function initRoom() {
     // ambientLight = new THREE.AmbientLight( 0x3f2806, 1 );
     // scene.add( ambientLight );
 
-    hemiLight = new THREE.HemisphereLight( 0xddeeff, 0x0f0e0d, 0.02 );
-    hemiLight.intensity = 0.6;
-    scene.add( hemiLight );
-    gui.add(controls, 'hemiLightIntensity', 0, 100,0.6).name("灯光强度1").onChange(function (e) {
-        hemiLight.intensity = e;
-    });
-    gui.open();
+
 
 }
 
 function animateRoom() {
     var timer = Date.now() * 0.01;
     cameraControls.update();
-
-    // hemiLight.intensity = controls.hemiLightIntensity;
-
 
     sphereGroup.rotation.y -= 0.005;
     statueGroup.rotation.y -= 0.05;

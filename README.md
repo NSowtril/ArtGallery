@@ -11,7 +11,7 @@
 ### 运行方式
 
 - 将文件夹拷贝到nginx等引擎的主目录下，在浏览器访问http://localhost/1552687-art-gallery/index.html
-- 或访问已部署到服务器的地址 http://nskins.site/web-course-project.html
+- 或访问已部署到服务器的地址 http://nskins.site/web-course-project/index.html
 
 ### 项目功能
 

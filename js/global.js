@@ -22,14 +22,24 @@ var pointLight;
 var controls = new function () {
     this.intensity = 0.3;
     this.lucy = {
-        x: 0.0,
-        z: 0.0,
+        x: 109,
+        z: 9,
     };
     this.combination = {
-        x: -150,
-        z: 150,
+        x: -108,
+        z: -114,
     };
     this.addItem = false;
+    this.lightShaft = {
+        x: -339,
+        y:-43,
+        z:-145,
+    };
+    this.logo = {
+        x: 0,
+        y: 50,
+        z: 250,
+    }
 };
 
 var cameraControls;
@@ -38,6 +48,8 @@ var sphereGroup, smallSphere;
 var centerGroup;
 var statueGroup;
 var shadingPhysicalGroup;
+var lightShaftGroup;
+var animalGroup;
 
 var rollOverMesh, rollOverMaterial;
 var cubeGeo, cubeMaterial;
@@ -46,4 +58,9 @@ var geometry;
 
 var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();
-var itemInfo = document.getElementById("item-info");;
+var itemInfo = document.getElementById("item-info");
+
+var morphs = [];
+
+var mixer;
+var mixer2;

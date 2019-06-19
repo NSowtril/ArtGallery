@@ -175,8 +175,8 @@ function initShadingPhysical() {
     shadingPhysicalGroup.add( pointLight );
 
     shadingPhysicalGroup.scale.set(0.15, 0.15, 0.15);
-    shadingPhysicalGroup.position.x = -150;
-    shadingPhysicalGroup.position.z = 150;
+    shadingPhysicalGroup.position.x = controls.combination.x;
+    shadingPhysicalGroup.position.z = controls.combination.z;
     scene.add(shadingPhysicalGroup);
 
 

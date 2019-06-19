@@ -49,7 +49,11 @@ function initStatue() {
 
     // statueGroup.position.set(200, 50, -50);
     statueGroup.name = "Title: Lucy\n Type: Statue \n\n The statue of lucy is a spinning angel with dolphins around her, and a homogram glittering above her head.";
-    statueGroup.position.set(0, 70, 0);
+    statueGroup.position.y=70;
+    statueGroup.position.x = controls.lucy.x;
+    statueGroup.position.z = controls.lucy.z;
+
+
     addObjectWithInfo(statueGroup);
     centerGroup.add(statueGroup);
 
@@ -109,8 +113,112 @@ function initStatue() {
 
         } );
 
+        var textureLoader = new THREE.TextureLoader();
+        var texture = textureLoader.load( 'textures/lightShaft.png' );
 
+        uniforms = {
+            // controls how fast the ray attenuates when the camera comes closer
+            attenuation: {
+                value: 10
+            },
+            // controls the speed of the animation
+            speed: {
+                value: 2
+            },
+            // the color of the ray
+            color: {
+                value: new THREE.Color( 0xdadc9f )
+            },
+            // the visual representation of the ray highly depends on the used texture
+            texture: {
+                value: texture
+            },
+            // global time value for animation
+            time: {
+                value: 0
+            },
+            // individual time offset so rays are animated differently if necessary
+            timeOffset: {
+                value: 0
+            }
+        };
+
+        lightShaftGroup = new THREE.Group();
+        scene.add(lightShaftGroup);
+
+
+        var lightShaftMaterial = new THREE.ShaderMaterial( {
+            uniforms: uniforms,
+            vertexShader: document.getElementById( 'vertexShader' ).textContent,
+            fragmentShader: document.getElementById( 'fragmentShader' ).textContent,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+            transparent: true,
+            side: THREE.DoubleSide
+        } );
+
+        var lightShaftGeometry = new THREE.PlaneBufferGeometry( 0.5, 5 );
+        var lightShaftScalar = 50;
+        var lightShaftName = "Title: Tree of Lights\nType: Artistic Device\n\n A Glowing tree sending out soft and warm lights, representing the harmony and passions of live.";
+
+        var loader = new THREE.GLTFLoader().setPath( 'models/gltf/Tree/' );
+        loader.load( 'tree.glb', function ( gltf ) {
+
+
+            console.log(gltf.scene);
+
+            // gltf.scene.scale.multiScalar(lightShaftScalar);
+            gltf.scene.traverse( function ( child ) {
+                if ( child.isMesh )	{
+                    child.material.transparent = false;
+                    child.material.alphaTest = 0.5;
+                    console.log(child);
+                }
+
+            } );
+            lightShaftGroup.add(gltf.scene);
+            gltf.scene.children[0].scale.multiplyScalar(lightShaftScalar);
+            gltf.scene.children[0].castShadow = true;
+            gltf.scene.children[0].receiveShadow = true;
+            console.log(lightShaftGroup);
+
+
+
+            // when the model is loaded, add light shafts
+
+            for ( var i = 0; i < 5; i ++ ) {
+
+                var lightShaft = new THREE.Mesh( lightShaftGeometry, lightShaftMaterial );
+                lightShaft.position.x = - 1 + 1.5 * Math.sign( ( i % 2 ) ) * lightShaftScalar;
+                lightShaft.position.y = 2* lightShaftScalar;
+                lightShaft.position.z = - 1.5 + ( i * 0.5 )* lightShaftScalar/2;
+                lightShaft.rotation.y = Math.PI * 0.2;
+                lightShaft.rotation.z = Math.PI * - ( 0.15 + 0.1 * Math.random() );
+                lightShaftGroup.add( lightShaft );
+                lightShaft.castShadow = true;
+                lightShaft.receiveShadow = true;
+                lightShaft.scale.multiplyScalar(lightShaftScalar);
+
+            }
+
+        } );
+
+        pointLight = new THREE.PointLight( 0xffaa00, 0.2, 500 , 1);
+        pointLight.castShadow = true;
+        pointLight.position.y = 50;
+        // pointLight.position.z = 50;
+        pointLight.shadow.radius = 5;
+        lightShaftGroup.add( pointLight );
+
+        lightShaftGroup.position.set(controls.lightShaft.x,
+                                controls.lightShaft.y,
+                                controls.lightShaft.z);
+
+
+        lightShaftGroup.name = "Title: Tree of Lights\nType: Artistic Device\n\n A Glowing tree sending out soft and warm lights, representing the harmony and passions of live.";
+        addObjectWithInfo(lightShaftGroup);
     } );
+
 
 
 }

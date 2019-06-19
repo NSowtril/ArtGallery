@@ -175,22 +175,7 @@ function initRoom() {
     mainLight.position.y = 60;
     mainLight.castShadow = true;
     sphereGroup.add( mainLight );
-
-    // var greenLight = new THREE.PointLight( 0x00ff00, 0.25, 100 );
-    // greenLight.position.set( 400, 200, 0 );
-    // scene.add( greenLight );
-    //
-    // var redLight = new THREE.PointLight( 0xff0000, 0.25, 1000 );
-    // redLight.position.set( - 550, 250, 0 );
-    // scene.add( redLight );
-    //
-    // var blueLight = new THREE.PointLight( 0x7f7fff, 0.25, 1000 );
-    // blueLight.position.set( 0, 250, 550 );
-    // scene.add( blueLight );
-
-    // 环境光
-    // ambientLight = new THREE.AmbientLight( 0x3f2806, 1 );
-    // scene.add( ambientLight );
+    sphereGroup.position.x = controls.lucy.x;
 
 
 

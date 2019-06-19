@@ -43,7 +43,7 @@ function onMouseMove( event ) {
     itemInfo.style.left = (event.clientX - 200) + "px";
     itemInfo.style.top = (event.clientY+ 50) + "px";
     itemInfo.innerText = "";
-    itemInfo.style.transitionDuration = "0.5s";
+    itemInfo.style.transitionDuration = "0.1s";
 
     raycaster.setFromCamera( mouse, camera );
 
@@ -57,15 +57,15 @@ function animate() {
     var intersects = raycaster.intersectObjects( objects, true );
     // console.log(intersects.length);
     for ( var i = 0; i < intersects.length; i++ ) {
-        console.log(intersects[i].object);
-        itemInfo.innerText = intersects[i].object.parent.name;
-
-
+        // console.log(intersects[i].object);
+        if(intersects[i].object.parent.type == "Group" || intersects[i].object.parent.name.indexOf("Title")>-1) {
+            itemInfo.innerText = intersects[i].object.parent.name;
+        }
     }
+
 
     // animateRoom();
     var timer = Date.now() * 0.01;
-    cameraControls.update();
 
     sphereGroup.rotation.y -= 0.005;
     statueGroup.rotation.y -= 0.05;
@@ -78,14 +78,32 @@ function animate() {
     smallSphere.rotation.y = ( Math.PI / 2 ) - timer * 0.1;
     smallSphere.rotation.z = timer * 0.8;
 
-    var delta = clock.getDelta();
-
-    if ( mixer ) {
-        mixer.update( delta );
-    }
-
 
     requestAnimationFrame( animate );
+
+    var delta = clock.getDelta();
+    if(mixer)
+        mixer.update( delta );
+
+    if(mixer2)
+        mixer2.update(delta);
+
+    for ( var i = 0; i < morphs.length; i ++ ) {
+
+        var morph = morphs[ i ];
+
+        morph.position.x += morph.speed * delta;
+        // console.log(morph.position);
+
+        if ( morph.position.x > 2000 ) {
+
+            morph.position.x = - 1000 - Math.random() * 500;
+
+        }
+
+    }
+
+    cameraControls.update(delta);
     renderer.render( scene, camera );
 
 }
@@ -190,6 +208,28 @@ function initGui() {
     });
     CombinationGui.open();
 
+    var ligthShaftGUI = gui.addFolder("树灯");
+    ligthShaftGUI.add(controls.lightShaft, "x", -350, 350).onChange(function (e) {
+        lightShaftGroup.position.x = e;
+    });
+    ligthShaftGUI.add(controls.lightShaft, "z", -200, 200).onChange(function (e) {
+        lightShaftGroup.position.z = e;
+    })
+    ligthShaftGUI.add(controls.lightShaft, "y", -1000, 1000).onChange(function (e) {
+        lightShaftGroup.position.y = e;
+    });
+
+    var logoGUI = gui.addFolder("LOGO");
+    logoGUI.add(controls.lightShaft, "x", -350, 350).onChange(function (e) {
+        animalGroup.position.x = e;
+    });
+    logoGUI.add(controls.lightShaft, "y", 0, 500).onChange(function (e) {
+        animalGroup.position.y = e;
+    });
+    logoGUI.add(controls.lightShaft, "z", -250, 250).onChange(function (e) {
+        animalGroup.position.z = e;
+    });
+
 
     gui.add(controls, 'intensity', 0, 5).name("灯光强度1").onChange(function (e) {
         hemiLight.intensity = e;
@@ -206,6 +246,7 @@ function initObject() {
     initStatue();
     initRoom();
     initVoxelPainter();
+    initAnimals();
 }
 
 function initLight() {

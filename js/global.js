@@ -20,7 +20,7 @@ var hemiLight;
 var pointLight;
 
 var controls = new function () {
-    this.intensity = 1;
+    this.intensity = 0.3;
     this.lucy = {
         x: 0.0,
         z: 0.0,
@@ -28,7 +28,8 @@ var controls = new function () {
     this.combination = {
         x: -150,
         z: 150,
-    }
+    };
+    this.addItem = false;
 };
 
 var cameraControls;
@@ -38,6 +39,11 @@ var centerGroup;
 var statueGroup;
 var shadingPhysicalGroup;
 
+var rollOverMesh, rollOverMaterial;
+var cubeGeo, cubeMaterial;
+var gridHelper;
+var geometry;
+
 var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();
-var itemInfo;
+var itemInfo = document.getElementById("item-info");;

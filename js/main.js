@@ -1,8 +1,6 @@
 // WebGL兼容性检查
 if ( WEBGL.isWebGLAvailable() === false ) {
-
     document.body.appendChild( WEBGL.getWebGLErrorMessage() );
-
 }
 
 window.onload = function () {
@@ -25,12 +23,14 @@ function init() {
     initRenderer(); // 渲染器
     initCameraControls();
 
-    // initVideo();
     console.log(scene);
-    // console.log(camera);
-    // console.log(renderer);
 
     window.addEventListener( 'mousemove', onMouseMove, false );
+
+    document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+    document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+    document.addEventListener( 'keydown', onDocumentKeyDown, false );
+    document.addEventListener( 'keyup', onDocumentKeyUp, false );
 }
 
 
@@ -40,13 +40,13 @@ function onMouseMove( event ) {
     mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
     mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
-
-    itemInfo = document.getElementById("item-info");
     itemInfo.style.left = (event.clientX - 200) + "px";
     itemInfo.style.top = (event.clientY+ 50) + "px";
     itemInfo.innerText = "";
+    itemInfo.style.transitionDuration = "0.5s";
 
     raycaster.setFromCamera( mouse, camera );
+
 
 }
 
@@ -57,11 +57,9 @@ function animate() {
     var intersects = raycaster.intersectObjects( objects, true );
     // console.log(intersects.length);
     for ( var i = 0; i < intersects.length; i++ ) {
+        console.log(intersects[i].object);
+        itemInfo.innerText = intersects[i].object.parent.name;
 
-        // if(intersects[i].object.name == "Lucy") {
-            console.log(intersects[i].object);
-            itemInfo.innerText = intersects[i].object.parent.name;
-        // }
 
     }
 
@@ -85,6 +83,7 @@ function animate() {
     if ( mixer ) {
         mixer.update( delta );
     }
+
 
     requestAnimationFrame( animate );
     renderer.render( scene, camera );
@@ -143,9 +142,9 @@ function initScene() {
     scene.background = new THREE.Color( 0x000000 );
     // scene.fog = new THREE.Fog( 0x000000, 1500, 4000 );
     scene.fog = new THREE.Fog( 0, 1000, 10000 );
-    scene.position.x = 60;
-    scene.position.y = -30;
-    scene.position.z = -100;
+    // scene.position.x = 60;
+    // scene.position.y = -30;
+    // scene.position.z = -100;
 }
 
 function initRenderer(){
@@ -170,7 +169,7 @@ function initGui() {
     shaderGuiGroup.add( shaderMaterial.uniforms.farClipping, 'value', 1, 10000, 1.0 ).name( '近端' );
     shaderGuiGroup.add( shaderMaterial.uniforms.pointSize, 'value', 1, 10, 1.0 ).name( '颗粒' );
     shaderGuiGroup.add( shaderMaterial.uniforms.zOffset, 'value', 0, 4000, 1.0 ).name( '偏移' );
-    // shaderGuiGroup.open();
+    shaderGuiGroup.open();
 
     var LucyGuiGroup = gui.addFolder("Lucy雕塑");
     LucyGuiGroup.add( controls.lucy, "x", -350, 350).name("左/右").onChange(function (e) {
@@ -179,7 +178,8 @@ function initGui() {
     LucyGuiGroup.add (controls.lucy, "z", -200, 200).name("前/后").onChange(function (e) {
         centerGroup.position.z = e;
     });
-    // LucyGuiGroup.open();
+    LucyGuiGroup.open();
+
 
     var CombinationGui = gui.addFolder("组合装置");
     CombinationGui.add( controls.combination, "x", -350, 350).onChange(function (e) {
@@ -188,20 +188,24 @@ function initGui() {
     CombinationGui.add( controls.combination, "z", -200, 200).onChange(function (e) {
         shadingPhysicalGroup.position.z = e;
     });
+    CombinationGui.open();
+
 
     gui.add(controls, 'intensity', 0, 5).name("灯光强度1").onChange(function (e) {
         hemiLight.intensity = e;
     });
+    gui.add(controls, 'addItem').name("添加物品");
 
 
     console.log(gui.domElement.style);
-    // gui.close();
+    gui.close();
 }
 
 function initObject() {
     initShadingPhysical();
     initStatue();
     initRoom();
+    initVoxelPainter();
 }
 
 function initLight() {
